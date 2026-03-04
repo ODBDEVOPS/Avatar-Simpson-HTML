@@ -1,0 +1,417 @@
+```html
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Homer CSS — Engine complet</title>
+
+<style>
+/* -------------------------------------------------------
+   VARIABLES GLOBALES
+------------------------------------------------------- */
+:root {
+  --skin: #fbd800;
+  --shadow: #cfae67;
+  --line: #110b00;
+  --white: #ffffff;
+
+  --highlight: rgba(247,254,140,1);
+  --deep-shadow: rgba(152,110,36,1);
+
+  --scale: 1;
+  --w: calc(94px * var(--scale));
+  --h: calc(133px * var(--scale));
+
+  --blink-normal: 7s;
+  --blink-double: 9s;
+  --blink-nervous: 1.5s;
+
+  --head-tilt-duration: 4s;
+  --head-tilt-angle: 3deg;
+}
+
+/* -------------------------------------------------------
+   STRUCTURE GÉNÉRALE
+------------------------------------------------------- */
+body {
+  background: #222;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+#homer {
+  position: relative;
+  width: var(--w);
+  height: var(--h);
+  margin: 40px auto;
+  cursor: pointer;
+}
+
+#homer * {
+  position: absolute;
+  box-sizing: content-box;
+}
+
+.body { background: var(--skin); }
+.circle { border-radius: 50%; }
+
+/* -------------------------------------------------------
+   ANIMATIONS GLOBALES
+------------------------------------------------------- */
+
+/* Respiration */
+@keyframes breathing {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-2px); }
+}
+
+/* Tremblement des joues */
+@keyframes cheek-tremble {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(0.5px); }
+}
+
+/* Clignements */
+@keyframes blink-top {
+  0%, 96%, 100% { transform: translateY(-100%); }
+  97% { transform: translateY(0); }
+  98% { transform: translateY(-100%); }
+}
+
+@keyframes blink-double {
+  0%, 90%, 100% { transform: translateY(-100%); }
+  92% { transform: translateY(0); }
+  94% { transform: translateY(-100%); }
+  96% { transform: translateY(0); }
+  98% { transform: translateY(-100%); }
+}
+
+@keyframes blink-nervous {
+  0%, 80%, 100% { transform: translateY(-100%); }
+  82%, 84%, 86%, 88% { transform: translateY(0); }
+}
+
+/* Mouvement de tête idle */
+@keyframes head-tilt {
+  0%   { transform: rotate(0deg) translateY(0); }
+  25%  { transform: rotate(var(--head-tilt-angle)) translateY(1px); }
+  50%  { transform: rotate(0deg) translateY(0); }
+  75%  { transform: rotate(calc(var(--head-tilt-angle) * -1)) translateY(1px); }
+  100% { transform: rotate(0deg) translateY(0); }
+}
+
+/* Surprise */
+@keyframes surprise-eyes {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.15); }
+}
+
+/* Pupilles idle */
+@keyframes pupil-move {
+  0%, 100% { transform: translate(0, 0); }
+  30% { transform: translate(1px, -1px); }
+  60% { transform: translate(-1px, 1px); }
+}
+
+/* -------------------------------------------------------
+   TÊTE
+------------------------------------------------------- */
+.head {
+  width: 100%;
+  height: 100%;
+  animation: head-tilt var(--head-tilt-duration) ease-in-out infinite;
+  transform-origin: 50% 10%;
+  transition: transform 0.1s linear;
+}
+
+/* Désactivation de l’idle quand la souris contrôle la tête */
+#homer.mouse-active .head {
+  animation: none !important;
+}
+
+/* -------------------------------------------------------
+   YEUX
+------------------------------------------------------- */
+.eye {
+  width: 31px;
+  height: 31px;
+  background: var(--white);
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.eye .pupil {
+  width: 4px;
+  height: 4px;
+  background: var(--line);
+  border-radius: 50%;
+  animation: pupil-move 5s ease-in-out infinite;
+}
+
+.eye .eyelid-top,
+.eye .eyelid-bottom {
+  width: 100%;
+  background: var(--skin);
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/* Clignements pseudo-aléatoires */
+.left-eye .eyelid-top,
+.left-eye .eyelid-bottom {
+  animation-duration: var(--blink-normal);
+  animation-name: blink-top;
+}
+
+.right-eye .eyelid-top,
+.right-eye .eyelid-bottom {
+  animation-duration: var(--blink-double);
+  animation-name: blink-double;
+}
+
+/* Survol = clignement nerveux */
+.eye:hover .eyelid-top,
+.eye:hover .eyelid-bottom {
+  animation-name: blink-nervous;
+  animation-duration: var(--blink-nervous);
+}
+
+/* Surprise ponctuelle */
+.eye.surprised {
+  animation: surprise-eyes 0.4s ease-out forwards;
+}
+
+/* -------------------------------------------------------
+   BOUCHE + JOUES
+------------------------------------------------------- */
+.mouth {
+  animation: breathing 4s ease-in-out infinite;
+}
+
+.mouth1, .mouth2, .mouth5, .mouth7 {
+  animation: cheek-tremble 0.25s ease-in-out infinite;
+  animation-play-state: paused;
+}
+
+.mouth:hover .mouth1,
+.mouth:hover .mouth2 {
+  animation-play-state: running;
+}
+
+/* -------------------------------------------------------
+   COU
+------------------------------------------------------- */
+.neck1, .neck2 {
+  animation: breathing 4s ease-in-out infinite;
+}
+
+/* -------------------------------------------------------
+   POSITIONS (simplifiées mais fidèles)
+------------------------------------------------------- */
+
+/* Yeux */
+.right-eye { top: 48px; left: 48px; }
+.left-eye  { top: 51px; left: 23px; }
+
+.right-eye .pupil { top: 11px; left: 20px; }
+.left-eye  .pupil { top: 13px; left: 11px; }
+
+.right-eye .eyelid-top { top: -18px; height: 17px; border-bottom: 1px solid var(--line); }
+.right-eye .eyelid-bottom { bottom: -11px; height: 10px; border-top: 1px solid var(--line); }
+
+.left-eye .eyelid-top { top: -21px; height: 20px; border-bottom: 1px solid var(--line); }
+.left-eye .eyelid-bottom { bottom: -11px; height: 10px; border-top: 1px solid var(--line); }
+
+/* Nez */
+.nose { top: 71px; left: 50px; width: 18px; height: 12px; background: var(--skin); border: 1px solid var(--line); border-left: none; border-right: none; }
+.nose-tip { top: 69px; left: 60px; width: 14px; height: 12px; background: var(--skin); border: 1px solid var(--line); border-left: none; border-radius: 0 50% 50% 0; }
+
+/* Bouche (bloc simplifié) */
+.mouth { top: 84px; left: 28px; width: 60px; height: 40px; }
+.mouth1, .mouth2, .mouth5, .mouth7 {
+  background: var(--shadow);
+  border-radius: 50%;
+}
+
+/* Cou */
+.neck1 { top: 85px; left: 16px; width: 6px; height: 31px; background: transparent; border-right: 1px solid var(--line); }
+.neck2 { top: 114px; left: 25px; width: 45px; height: 19px; background: var(--skin); border: 1px solid var(--line); border-top: none; }
+
+/* -------------------------------------------------------
+   SYSTÈME D’ÉMOTIONS
+------------------------------------------------------- */
+
+/* JOIE */
+.emotion-joy .eye {
+  transform: scaleY(0.9);
+}
+
+.emotion-joy .pupil {
+  transform: translateY(-2px);
+}
+
+.emotion-joy .mouth {
+  transform: translateY(-2px) scaleX(1.05);
+}
+
+/* COLÈRE */
+.emotion-anger .eye {
+  transform: scaleY(0.8);
+}
+
+.emotion-anger .eyelid-top {
+  border-bottom-width: 3px;
+  transform: translateY(-6px);
+}
+
+.emotion-anger .mouth {
+  transform: rotate(5deg) translateY(3px);
+}
+
+/* SURPRISE (état prolongé) */
+.emotion-surprise .eye {
+  transform: scale(1.2);
+}
+
+.emotion-surprise .pupil {
+  transform: translate(0, 0) !important;
+}
+
+.emotion-surprise .mouth {
+  transform: scale(1.2) translateY(2px);
+}
+
+/* FATIGUE */
+.emotion-tired .eyelid-top {
+  transform: translateY(10px);
+}
+
+.emotion-tired .pupil {
+  transform: translateY(3px);
+}
+
+.emotion-tired .mouth {
+  opacity: 0.8;
+  transform: translateY(3px) scaleX(0.95);
+}
+</style>
+</head>
+
+<body>
+
+<div id="homer">
+  <div class="head">
+
+    <div class="eye left-eye">
+      <div class="pupil"></div>
+      <div class="eyelid-top"></div>
+      <div class="eyelid-bottom"></div>
+    </div>
+
+    <div class="eye right-eye">
+      <div class="pupil"></div>
+      <div class="eyelid-top"></div>
+      <div class="eyelid-bottom"></div>
+    </div>
+
+    <div class="nose body"></div>
+    <div class="nose-tip body"></div>
+
+    <div class="mouth">
+      <div class="mouth1 body"></div>
+      <div class="mouth2 body"></div>
+      <div class="mouth5 body"></div>
+      <div class="mouth7 body"></div>
+    </div>
+
+    <div class="neck1 body"></div>
+    <div class="neck2 body"></div>
+
+  </div>
+</div>
+
+<script>
+const homer = document.getElementById("homer");
+const head = homer.querySelector(".head");
+const pupils = homer.querySelectorAll(".pupil");
+
+/* -------------------------------------------------------
+   SYSTÈME D’ÉMOTIONS
+------------------------------------------------------- */
+function setEmotion(emotion) {
+  const emotions = ["joy", "anger", "surprise", "tired"];
+  emotions.forEach(e => homer.classList.remove("emotion-" + e));
+  if (emotion && emotions.includes(emotion)) {
+    homer.classList.add("emotion-" + emotion);
+  }
+}
+
+/* Exemple : cycle d’émotions automatique (optionnel) */
+// let emoIndex = 0;
+// const emoList = ["joy", "anger", "surprise", "tired", null];
+// setInterval(() => {
+//   setEmotion(emoList[emoIndex]);
+//   emoIndex = (emoIndex + 1) % emoList.length;
+// }, 4000);
+
+/* -------------------------------------------------------
+   SURPRISE AU CLIC
+------------------------------------------------------- */
+homer.addEventListener("click", () => {
+  document.querySelectorAll(".eye").forEach(e => {
+    e.classList.add("surprised");
+    setTimeout(() => e.classList.remove("surprised"), 600);
+  });
+  setEmotion("surprise");
+  setTimeout(() => setEmotion(null), 800);
+});
+
+/* -------------------------------------------------------
+   REGARD QUI SUIT LA SOURIS
+------------------------------------------------------- */
+document.addEventListener("mousemove", (e) => {
+  const rect = homer.getBoundingClientRect();
+  const x = e.clientX - (rect.left + rect.width / 2);
+  const y = e.clientY - (rect.top + rect.height / 2);
+
+  const max = 4;
+  const px = Math.max(-max, Math.min(max, x / 20));
+  const py = Math.max(-max, Math.min(max, y / 20));
+
+  pupils.forEach(p => {
+    p.style.transform = `translate(${px}px, ${py}px)`;
+  });
+});
+
+/* -------------------------------------------------------
+   MOUVEMENT DE TÊTE QUI SUIT LA SOURIS
+------------------------------------------------------- */
+let mouseTimer;
+document.addEventListener("mousemove", (e) => {
+  const rect = homer.getBoundingClientRect();
+  const x = e.clientX - (rect.left + rect.width / 2);
+  const y = e.clientY - (rect.top + rect.height / 2);
+
+  const maxTilt = 6;
+  const maxMove = 4;
+
+  const tiltX = Math.max(-maxTilt, Math.min(maxTilt, x / 40));
+  const tiltY = Math.max(-maxTilt, Math.min(maxTilt, y / 40));
+
+  homer.classList.add("mouse-active");
+  head.style.transform = `rotate(${tiltX}deg) translateY(${tiltY}px)`;
+
+  clearTimeout(mouseTimer);
+  mouseTimer = setTimeout(() => {
+    homer.classList.remove("mouse-active");
+    head.style.transform = "";
+  }, 300);
+});
+</script>
+
+</body>
+</html>
+```
