@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Homer Engine — Menu</title>
+
+<style>
+:root {
+  --bg: #1b1b1b;
+  --card-bg: #2a2a2a;
+  --accent: #fbd800;
+  --text: #f5f5f5;
+  --radius: 18px;
+  --shadow: 0 8px 20px rgba(0,0,0,0.35);
+  --hover-shadow: 0 12px 28px rgba(0,0,0,0.55);
+  --transition: 0.25s ease;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  font-family: system-ui, sans-serif;
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.container {
+  width: 90%;
+  max-width: 1100px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 28px;
+  padding: 40px 0;
+}
+
+.card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  padding: 24px;
+  text-align: center;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: transform var(--transition), box-shadow var(--transition);
+  position: relative;
+  overflow: hidden;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--hover-shadow);
+}
+
+.card h2 {
+  margin: 0;
+  font-size: 1.4rem;
+  color: var(--accent);
+}
+
+.card p {
+  opacity: 0.8;
+  font-size: 0.95rem;
+  margin-top: 10px;
+}
+
+.card::after {
+  content: "";
+  position: absolute;
+  top: -40%;
+  left: -40%;
+  width: 180%;
+  height: 180%;
+  background: radial-gradient(circle, rgba(255,255,255,0.06), transparent 60%);
+  transform: rotate(25deg);
+  transition: opacity var(--transition);
+  opacity: 0;
+}
+
+.card:hover::after {
+  opacity: 1;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+header h1 {
+  font-size: 2.4rem;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+
+header p {
+  opacity: 0.7;
+  font-size: 1rem;
+}
+</style>
+</head>
+
+<body>
+
+<div class="wrapper">
+  <header>
+    <h1>Homer Engine v2.0</h1>
+    <p>Sélectionne une expérience</p>
+  </header>
+
+  <div class="container">
+
+    <div class="card" onclick="location.href='index_old.html'">
+      <h2>Homer Interactif</h2>
+      <p>Le personnage autonome complet : émotions, réactions, mouvements.</p>
+    </div>
+
+    <div class="card" onclick="location.href='indexv2.html'">
+      <h2>Galerie</h2>
+      <p>Exploration visuelle, assets, variations et concepts graphiques.</p>
+    </div>
+
+    <div class="card" onclick="location.href='moderne.html'">
+      <h2>Homer Engine API</h2>
+      <p>Documentation du moteur d’émotions, hooks et extensions.</p>
+    </div>
+
+    <div class="card" onclick="location.href='HomerEngine_v2.0.html'">
+      <h2>Sandbox</h2>
+      <p>Tester des comportements, animations et interactions personnalisées.</p>
+    </div>
+
+    <div class="card" onclick="location.href='index.html'">
+      <h2>À propos</h2>
+      <p>Philosophie du projet, inspirations et feuille de route.</p>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
